@@ -12,10 +12,12 @@
 
 html {
   scroll-behavior: smooth;
+  font-size: 16px;
 }
 body {
   background-color: rgb(34, 123, 146);
   height: 200vh; 
+  font-size: 1rem;
 }
 
 h3, h1, p{
@@ -51,7 +53,7 @@ h3, h1, p{
 }
 
 .navbar-list li {
-  margin: 0 20px;
+  margin: 0 2vw;
   transition: transform 0.2s ease-in-out;
 }
 
@@ -62,7 +64,7 @@ h3, h1, p{
   text-decoration: none;
   color: rgb(9, 98, 121);
   font-weight: bold;
-  padding: 5px 10px;
+  padding: 0.3rem 0.6rem;
 }
 
 .navbar-list a:hover {
@@ -77,43 +79,43 @@ h3, h1, p{
 }
 
 .Me {
-  padding: 7px;
+  padding: 2rem;
   background-color: rgb(136, 197, 211);
   display: flex;
-  width: 60vw;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 5%;
+  width: 60vw;
 
 }
 
 .Info {
-  padding: 10px;
+  padding: 1rem;
   line-height: 2.0;
-  font-size: 20px;
-  margin: 40px 0;
+  font-size: 1.25rem;
+  margin: 4rem 0;
 }
 
 #experience {
-  padding: 45px;
+  padding: 2rem;
 
 }
 
 .experience-cards {
-  padding: 10px;
+  padding: 1rem;
   display: flex;
-  gap: 20px;
+  gap: 2vw;
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 2rem;
 
 }
 
 .experience-card {
   background-color: white;
-  padding: 20px;
-  width: 250px;
+  padding: 1.25rem;
+  width: 20vw;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   transition: transform 0.2s ease;
@@ -125,7 +127,7 @@ h3, h1, p{
   background-color: rgb(136, 197, 211);
 }
 #socials {
-  padding: 45px;
+  padding: 2rem;
 }
 
 .LinkedInIcon {
@@ -142,12 +144,14 @@ h3, h1, p{
 
 
 #resume {
-  padding: 45px;
+  padding: 2rem;
 }
 
 .resume {
-  padding: 10px;
+  padding: 1.25rem;
   background-color: rgb(136, 197, 211);
+  font-size: 1.2rem;
+  max-width: 100%;
 }
 
 ::-webkit-scrollbar {
@@ -166,3 +170,52 @@ h3, h1, p{
 ::-webkit-scrollbar-thumb:hover {
   background-color: rgb(101, 179, 197);
 }
+
+@media (max-width: 1024px) {
+  .navbar-list li{
+    margin: 0 2vw;
+  }
+
+  .Me {
+    flex-direction: column;
+    width: 80vw;
+  }
+
+  .experience-card {
+    width: 45vw;
+  }
+
+  .Info {
+    font-size: 1rem;
+  }
+  
+  .Me img {
+    width: 8vw;
+    height: 8vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-list li{
+    margin: 0 5vw;
+  }
+
+  .Me {
+    flex-direction: column;
+    width: 90vw;
+  }
+
+  .experience-card {
+    width: 80vw;
+  }
+
+  .Info {
+    font-size: 0.875rem;
+  }
+  
+  .Me img {
+    width: 20vw;
+    height: 20vw;
+  }
+}
+
