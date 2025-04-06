@@ -21,7 +21,7 @@ body {
 }
 
 h3, h1, p{
-  line-height: 2.2;
+  line-height: 2.5;
   text-align: center;
 }
 
@@ -98,7 +98,7 @@ h3, h1, p{
 }
 
 #experience {
-  padding: 2rem;
+  padding: 3rem;
 
 }
 
@@ -127,7 +127,7 @@ h3, h1, p{
   background-color: rgb(136, 197, 211);
 }
 #socials {
-  padding: 2rem;
+  padding: 3rem;
 }
 
 .LinkedInIcon {
@@ -144,7 +144,7 @@ h3, h1, p{
 
 
 #resume {
-  padding: 2rem;
+  padding: 3rem;
 }
 
 .resume {
