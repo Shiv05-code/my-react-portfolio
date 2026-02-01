@@ -23,10 +23,10 @@ function App() {
           <img src={Me} alt="Description" width="300" ></img>
           <div className="Info">
             <p>I'm a Junior at Cal State University of Long Beach
-            pursuing my Bachelor's Degree in Computer Science. Passionate about technology,
-            I am fascinated by the way it shapes our world and enjoy tackling challenging problems
-            to find innovative solutions. In my free time, I enjoy working out, playing the flute,
-            and spending time in nature.
+            working towards my Bachelor's Degree in Computer Science. I'm passionate about technology and
+            intrigued by the way it shapes our world. I enjoy tackling challenging problems
+            to discover creative solutions. In my free time, you'll see me hitting the gym, playing my flute,
+            or being one with nature. 
             </p>
           </div>
         </div>
