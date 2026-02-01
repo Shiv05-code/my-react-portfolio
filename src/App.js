@@ -3,6 +3,7 @@ import Me from './Me.jpg';
 import MyResume from "./MyResume.jpg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import {faEnvelope, faDownload} from '@fortawesome/free-solid-svg-icons';
 import { ReactTyped } from 'react-typed';
 import { useState } from 'react';
 
@@ -14,6 +15,17 @@ function App() {
       ...prev,
       [cardId]: !prev[cardId]
     }));
+  };
+
+  // Function to handle resume download
+  const handleDownloadResume = () => {
+    // Create a link element
+    const link = document.createElement('a');
+    link.href = MyResume;
+    link.download = 'Shivansh_Kanda_Resume.jpg'; // Set the desired file name
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -64,9 +76,9 @@ function App() {
               </div>
               <div className="flip-card-back">
                 <h2>Jul. 2025 - Present</h2>
-                <p> ~ Collaborated with a team to develop and execute targeted <b>email campaigns</b> to secure corporate funding for children's financial literacy programs.</p>
-                <p> ~ Promoted a Vans campaign which <b>funded</b> programs for career readiness, financial literacy, and business building for <b>each</b> student.</p>
-                <p> ~ Taught team members how to effectively utilize social platforms to leverage a large group of audience to gain <b>recognition</b> and <b>support</b>.</p>
+                <p><b>~</b> Collaborated on targeted email campaigns to secure corporate funding for children’s financial literacy programs.</p>
+                <p><b>~</b> Supported a Vans campaign funding student career readiness, financial literacy, and business development initiatives.</p>
+                <p><b>~</b> Trained team members to leverage social media for broader reach and engagement.</p>
               </div>
             </div>
           </div>
@@ -79,9 +91,9 @@ function App() {
               </div>
               <div className="flip-card-back">
                 <h2>Jul. 2024 - Jan. 2025</h2>
-                <p> ~ Instructed Kindergarten - <b>6th</b> graders during summer and after-school, <b>fostering growth</b> in learning strategies, discipline, and character development.</p>
-                <p> ~ Designed and implemented <b>lesson plans</b> for groups of up to <b>20</b> students per session, ensuring engaging and age-appropriate instruction.</p>
-                <p> ~ Provided individualized support to approximately <b>5</b> students per week, contributing to measurable <b>academic improvement</b>.</p>
+                <p><b>~</b> Instructed K–6 students in summer and after-school programs, supporting learning strategies, discipline, and character development.</p>
+                <p><b>~</b> Designed and delivered engaging, age-appropriate lessons for groups of up to 20 students.</p>
+                <p><b>~</b> Provided individualized support to select students, leading to measurable academic improvement.</p>
               </div>
             </div>
           </div>
@@ -94,9 +106,9 @@ function App() {
               </div>
               <div className="flip-card-back">
                 <h2>Oct. 2023 - Jan. 2024</h2>
-                <p> ~ Managed inventory for over <b>200 SKUs</b>, conducting regular audits to ensure <b>90%</b> inventory accuracy.</p>
-                <p> ~ Assisted an average of <b>50</b> customers per week, offering product information and guidance, helping maintain a high level of <b>customer satisfaction</b>.</p>
-                <p> ~ Supported the timely display of promotional items, contributing to a noticeable increase in <b>sales</b> during promotional periods.</p>
+                <p><b>~</b> Managed inventory for 200+ SKUs, conducting regular audits to maintain 90% accuracy.</p>
+                <p><b>~</b> Assisted an average of 50 customers weekly by providing product guidance and support.</p>
+                <p><b>~</b> Helped execute timely promotional displays, contributing to increased sales during campaigns.</p>
               </div>
             </div>
           </div>
@@ -107,13 +119,17 @@ function App() {
       <section id="socials">
         <h1>Socials</h1>
         <div className="icon-container">
-          <div className="LinkedInIcon">
+          <div className="social-icon">
             <a href="https://www.linkedin.com/in/shivansh-kanda-08a443294/" target="_blank" rel="noopener noreferrer">
-            <FontAwesomeIcon icon={faLinkedin} size="3x" className="LinkedInIcon"/>
+            <FontAwesomeIcon icon={faLinkedin} size="3x" className="icon"/>
+            </a>
+          </div>
+          <div className="social-icon">
+            <a href="mailto:shivanshkanda@gmail.com">
+              <FontAwesomeIcon icon={faEnvelope} size="3x" className="icon"/>
             </a>
           </div>
         </div>
-
       </section>
 
       <section id="resume">
@@ -121,6 +137,9 @@ function App() {
           <h1>Resume</h1>
           <div className="resume">
             <img src={MyResume} alt="Resume" width="775"></img>
+            <button className="download-button" onClick={handleDownloadResume}>
+              <FontAwesomeIcon icon={faDownload} /> Download Resume
+            </button>
           </div>
         </div>
       </section>
