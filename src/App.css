@@ -25,6 +25,10 @@ h3, h1, p{
   text-align: center;
 }
 
+section {
+  scroll-margin-top: 85px;
+}
+
 .header{
   position: sticky;
   top: 0;
