@@ -458,7 +458,7 @@ section {
 }
 
 .flip-card-front {
-  background-color: var(--white);
+  background-color: transparent;
 }
 
 .flip-card-front h1 {
