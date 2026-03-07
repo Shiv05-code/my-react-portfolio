@@ -3,6 +3,7 @@ import Me from './Me.jpg';
 import MyResume from "./MyResume.jpg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import DremioLogo from './assets/dremio.svg';
 import { faEnvelope, faDownload, faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 import { ReactTyped } from 'react-typed';
 import { useEffect, useRef, useState, useMemo } from 'react';
@@ -48,6 +49,60 @@ function App() {
 });
   const sections = useMemo(() => ["about", "experience", "socials", "resume"], []);
   const [activeSection, setActiveSection] = useState("about");
+
+  // ===== Devicon language carousel =====
+const languages = useMemo(() => ([
+  { key: "python", label: "Python", iconClass: "devicon-python-plain" },
+  { key: "c", label: "C", iconClass: "devicon-c-plain" },
+  { key: "cpp", label: "C++", iconClass: "devicon-cplusplus-plain" },
+  { key: "html", label: "HTML", iconClass: "devicon-html5-plain" },
+  { key: "css", label: "CSS", iconClass: "devicon-css3-plain" },
+  { key: "js", label: "JavaScript", iconClass: "devicon-javascript-plain" },
+  { key: "mysql", label: "MySQL", iconClass: "devicon-mysql-plain" },
+]), []);
+
+// ===== Tools carousel =====
+const tools = useMemo(() => ([
+  { key: "docker", label: "Docker", iconClass: "devicon-docker-plain" },
+  { key: "postman", label: "Postman", iconClass: "devicon-postman-plain" },
+  { key: "dremio", label: "Dremio", imgSrc: DremioLogo },
+  { key: "api", label: "APIs", iconClass: "devicon-nodejs-plain" }, // neutral API-ish icon
+]), []);
+
+const [langStart, setLangStart] = useState(0);
+const [langAnimating, setLangAnimating] = useState(false);
+
+const [toolStart, setToolStart] = useState(0);
+const [toolAnimating, setToolAnimating] = useState(false);
+
+// languages rotate right → left (same as you had)
+useEffect(() => {
+  const DURATION = 650;
+  const INTERVAL = 1800;
+  const id = setInterval(() => {
+    setLangAnimating(true);
+    setTimeout(() => {
+      setLangStart((s) => (s + 1) % languages.length);
+      setLangAnimating(false);
+    }, DURATION);
+  }, INTERVAL);
+  return () => clearInterval(id);
+}, [languages.length]);
+
+// tools rotate left → right (opposite direction)
+useEffect(() => {
+  const DURATION = 650;
+  const INTERVAL = 1800;
+  const id = setInterval(() => {
+    setToolAnimating(true);
+    setTimeout(() => {
+      // move backwards so visual direction is opposite
+      setToolStart((s) => (s - 1 + tools.length) % tools.length);
+      setToolAnimating(false);
+    }, DURATION);
+  }, INTERVAL);
+  return () => clearInterval(id);
+}, [tools.length]);
 
   useEffect(() => {
   const theme = darkMode ? "dark" : "light";
@@ -152,6 +207,61 @@ function App() {
 
       <Reveal id="experience">
         <h1>Experience</h1>
+        {/* Languages carousel (right → left) */}
+        <div className="lang-carousel" aria-label="Languages carousel">
+          {[0,1,2,3].map((pos) => {
+            const item = languages[(langStart + pos) % languages.length];
+            const slot = pos - (langAnimating ? 1 : 0);
+            const isGrowing = langAnimating ? (pos === 2) : (pos === 1);
+
+            return (
+              <div
+                key={`lang-${item.key}-${langStart}-${pos}`}
+                className={`lang-item ${isGrowing ? "is-growing" : ""}`}
+                style={{ transform: `translateX(${slot * 140}px)` }}
+                title={item.label}
+              >
+                <div className="lang-pill">
+                  <i className={`lang-devicon ${item.iconClass ?? ""}`} aria-hidden="true" />
+                  <span className="lang-label">{item.label}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Tools carousel (left → right) */}
+        <div className="tools-carousel" aria-label="Tools carousel">
+          {[0, 1, 2, 3].map((pos) => {
+            const item = tools[(toolStart + pos) % tools.length];
+
+            // IMPORTANT:
+            // start with slots [-1,0,1,2] so one item is off-screen on the left,
+            // then animate to [0,1,2,3] (shift right)
+            const slot = pos - (toolAnimating ? 0 : 1);
+
+            // Growing item: the one entering from the left is pos === 1 during the animation
+            const isGrowing = toolAnimating ? (pos === 1) : (pos === 2);
+
+            return (
+              <div
+                key={`tool-${item.key}-${toolStart}-${pos}`}
+                className={`tool-item ${isGrowing ? "is-growing" : ""}`}
+                style={{ transform: `translateX(${slot * 140}px)` }}
+                title={item.label}
+              >
+                <div className="lang-pill">
+                  {item.imgSrc ? (
+                    <img src={item.imgSrc} alt={item.label} className="tool-logo" />
+                  ) : (
+                    <i className={`lang-devicon ${item.iconClass}`} aria-hidden="true" />
+                  )}
+                  <span className="lang-label">{item.label}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
         <div className="experience-cards">
           <div className={`flip-card ${flippedCards['card1'] ? 'flipped' : ''}`} onClick={() => toggleFlip('card1')}>
             <div className="flip-card-inner">

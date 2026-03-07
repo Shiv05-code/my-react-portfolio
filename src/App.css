@@ -2,6 +2,7 @@
   --bg-color: rgb(34, 123, 146);
   --card-color: rgb(136, 197, 211);
   --text-primary: rgb(9, 98, 121);
+  --scrollbar-hover: rgb(101, 179, 197);
   --text-dark: #000000;
   --white: #ffffff;
 }
@@ -11,6 +12,7 @@
   --bg-color: #103544;      /* deep teal background */
   --card-color: #1e5b70;    /* darker version of your card teal */
   --text-primary: #d7f3ff;  /* soft light text (not neon) */
+  --scrollbar-hover: #124c60; 
   --text-dark: #f1f5f9;
   --white: #b9d6e1;        /* "white" surfaces stay light, not black */
 }
@@ -215,8 +217,8 @@ section {
   right: 14px;
   top: 50%;
   transform: translateY(-50%);
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 2px solid var(--text-primary);
   background: var(--white);
@@ -229,7 +231,7 @@ section {
 /* Make the icon feel bold + visible */
 .theme-toggle svg {
   color: var(--text-primary);
-  font-size: 18px;
+  font-size: 16px;
   filter: drop-shadow(0 1px 0 rgba(0,0,0,0.15));
 }
 
@@ -295,6 +297,109 @@ section {
   justify-content: center;
   margin-top: 2rem;
 
+}
+
+/* ===== Devicon language carousel ===== */
+.lang-carousel {
+  margin: 1.25rem auto 0;
+  width: 420px; /* 3 slots * 140px */
+  height: 70px;
+  position: relative;
+  overflow: hidden;
+}
+
+.lang-item {
+  position: absolute;
+  top: 0;
+  width: 140px;
+  height: 70px;
+  display: grid;
+  place-items: center;
+  transition: transform 650ms ease;
+}
+
+.lang-label {
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+/* ensure lang-pill looks glassy in both themes */
+.lang-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transform: scale(0.96);
+  transition: transform 650ms ease, background 650ms ease, border-color 650ms ease;
+}
+
+/* make the glass effect consistent in light & dark */
+[data-theme="dark"] .lang-pill,
+[data-theme="light"] .lang-pill {
+  background: rgba(255,255,255,0.20);    /* semi-white glass that works on both */
+  border: 1px solid rgba(255,255,255,0.06); /* subtle border for depth */
+}
+
+/* Tools carousel mirrors languages but moves opposite direction visually */
+.tools-carousel {
+  margin: 0.45rem auto 0.75rem;
+  width: 420px;
+  height: 70px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tool-item {
+  position: absolute;
+  top: 0;
+  width: 140px;
+  height: 70px;
+  display: grid;
+  place-items: center;
+  transition: transform 650ms ease;
+}
+
+.tool-logo {
+  width: 1.55rem;
+  height: 1.55rem;
+  display: block;
+  object-fit: contain;
+  transform-origin: center;
+}
+
+.tool-item .lang-devicon,
+.lang-item .lang-devicon {
+  font-size: 1.55rem;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+/* incoming one grows slightly */
+.lang-item.is-growing .lang-pill,
+.tool-item.is-growing .lang-pill {
+  transform: scale(1.08);
+}
+
+.lang-devicon {
+  font-size: 1.55rem;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.lang-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+}
+
+/* incoming one grows slightly */
+.lang-item.is-growing .lang-pill {
+  transform: scale(1.08);
 }
 
 /* Flip Card Styles */
@@ -488,7 +593,7 @@ section {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(101, 179, 197);
+  background-color: var(--scrollbar-hover);
 }
 
 /* Typing animation cursor styling */
