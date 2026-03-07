@@ -3,11 +3,82 @@ import Me from './Me.jpg';
 import MyResume from "./MyResume.jpg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import {faEnvelope, faDownload} from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faDownload, faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 import { ReactTyped } from 'react-typed';
-import { useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
+
+function Reveal({ children, className = "", ...props }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add("is-visible");
+          observer.unobserve(el); // animate once
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section ref={ref} className={`reveal ${className}`} {...props}>
+      {children}
+    </section>
+  );
+}
 
 function App() {
+  const [darkMode, setDarkMode] = useState(() => {
+  const saved = localStorage.getItem("theme");
+
+  if (saved) {
+    return saved === "dark";
+  }
+
+  // No saved preference → use system preference
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+});
+  const sections = useMemo(() => ["about", "experience", "socials", "resume"], []);
+  const [activeSection, setActiveSection] = useState("about");
+
+  useEffect(() => {
+  const theme = darkMode ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("theme", theme);
+}, [darkMode]);
+
+  useEffect(() => {
+  const navOffset = 95; // your sticky header height (85) + a little cushion
+
+  const onScroll = () => {
+    const pos = window.scrollY + navOffset;
+
+    // last section whose top is above pos
+    let current = sections[0];
+
+    for (const id of sections) {
+      const el = document.getElementById(id);
+      if (!el) continue;
+
+      if (el.offsetTop <= pos) current = id;
+    }
+
+    setActiveSection(current);
+  };
+
+  onScroll(); // set initial
+  window.addEventListener("scroll", onScroll, { passive: true });
+  return () => window.removeEventListener("scroll", onScroll);
+}, [sections]);
+
   const [flippedCards, setFlippedCards] = useState({});
 
   const toggleFlip = (cardId) => {
@@ -17,12 +88,10 @@ function App() {
     }));
   };
 
-  // Function to handle resume download
   const handleDownloadResume = () => {
-    // Create a link element
     const link = document.createElement('a');
     link.href = MyResume;
-    link.download = 'Shivansh_Kanda_Resume.jpg'; // Set the desired file name
+    link.download = 'Shivansh_Kanda_Resume.jpg';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -32,42 +101,58 @@ function App() {
     <div className="app">
       <header className="header">
         <nav className="navbar">
+          <button
+            className="theme-toggle"
+            onClick={() => setDarkMode(prev => !prev)}
+          >
+            <FontAwesomeIcon icon={darkMode ? faSun : faMoon} />
+          </button>
+
           <ul className="navbar-list">
-            <li> <a href="#about">About</a></li>
-            <li> <a href="#experience">Experience</a></li>
-            <li> <a href="#socials">Socials</a></li>
-            <li> <a href="#resume">Resume</a></li>
+            <li>
+              <a href="#about" className={activeSection === "about" ? "nav-active" : ""}>About</a>
+            </li>
+            <li>
+              <a href="#experience" className={activeSection === "experience" ? "nav-active" : ""}>Experience</a>
+            </li>
+            <li>
+              <a href="#socials" className={activeSection === "socials" ? "nav-active" : ""}>Socials</a>
+            </li>
+            <li>
+              <a href="#resume" className={activeSection === "resume" ? "nav-active" : ""}>Resume</a>
+            </li>
           </ul>
         </nav>
       </header>
-      <section id="about">
+
+      <Reveal id="about">
         <h3>Hello, I'm</h3>
         <h1 className="typing-container">
           <ReactTyped
-          strings={["Shivansh Kanda"]}
-          typeSpeed={100}
-          showCursor={true}
-          cursorChar="|"
+            strings={["Shivansh Kanda"]}
+            typeSpeed={100}
+            showCursor={true}
+            cursorChar="|"
           />
         </h1>
-        <div className='Me'>
-          <img src={Me} alt="Description" width="300" ></img>
+
+        <div className="Me">
+          <img src={Me} alt="Description" width="300" />
           <div className="Info">
-            <p>I'm a Junior at Cal State University of Long Beach
-            working towards my Bachelor's Degree in Computer Science. I'm passionate about technology and
-            intrigued by the way it shapes our world. I enjoy tackling challenging problems
-            to discover creative solutions. In my free time, you'll see me hitting the gym, playing my flute,
-            or being one with nature. 
+            <p>
+              I'm a Junior at Cal State University of Long Beach
+              working towards my Bachelor's Degree in Computer Science. I'm passionate about technology and
+              intrigued by the way it shapes our world. I enjoy tackling challenging problems
+              to discover creative solutions. In my free time, you'll see me hitting the gym, playing my flute,
+              or being one with nature.
             </p>
           </div>
         </div>
-      </section>
+      </Reveal>
 
-      <section id="experience">
+      <Reveal id="experience">
         <h1>Experience</h1>
         <div className="experience-cards">
-
-          {/* Card 1 */}
           <div className={`flip-card ${flippedCards['card1'] ? 'flipped' : ''}`} onClick={() => toggleFlip('card1')}>
             <div className="flip-card-inner">
               <div className="flip-card-front">
@@ -112,42 +197,38 @@ function App() {
               </div>
             </div>
           </div>
-
         </div>
-      </section>
+      </Reveal>
 
-      <section id="socials">
+      <Reveal id="socials">
         <h1>Socials</h1>
         <div className="icon-container">
           <div className="social-icon">
             <a href="https://www.linkedin.com/in/shivansh-kanda-08a443294/" target="_blank" rel="noopener noreferrer">
-            <FontAwesomeIcon icon={faLinkedin} size="3x" className="icon"/>
+              <FontAwesomeIcon icon={faLinkedin} size="3x" className="icon" />
             </a>
           </div>
           <div className="social-icon">
             <a href="mailto:shivanshkanda@gmail.com">
-              <FontAwesomeIcon icon={faEnvelope} size="3x" className="icon"/>
+              <FontAwesomeIcon icon={faEnvelope} size="3x" className="icon" />
             </a>
           </div>
         </div>
-      </section>
+      </Reveal>
 
-      <section id="resume">
+      <Reveal id="resume">
         <div>
           <h1>Resume</h1>
           <div className="resume">
-            <img src={MyResume} alt="Resume" width="775"></img>
+            <img src={MyResume} alt="Resume" width="775" />
             <button className="download-button" onClick={handleDownloadResume}>
               <FontAwesomeIcon icon={faDownload} /> Download Resume
             </button>
           </div>
         </div>
-      </section>
+      </Reveal>
     </div>
-
   );
 }
-
-
 
 export default App;

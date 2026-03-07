@@ -1,4 +1,23 @@
+:root {
+  --bg-color: rgb(34, 123, 146);
+  --card-color: rgb(136, 197, 211);
+  --text-primary: rgb(9, 98, 121);
+  --text-dark: #000000;
+  --white: #ffffff;
+}
+
+[data-theme="dark"] {
+  /* Night version of your current teal theme (not black/navy) */
+  --bg-color: #103544;      /* deep teal background */
+  --card-color: #1e5b70;    /* darker version of your card teal */
+  --text-primary: #d7f3ff;  /* soft light text (not neon) */
+  --text-dark: #f1f5f9;
+  --white: #b9d6e1;        /* "white" surfaces stay light, not black */
+}
+
 .app {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,15 +33,109 @@ html {
   scroll-behavior: smooth;
   font-size: 16px;
 }
+
 body {
-  background-color: rgb(34, 123, 146);
-  min-height: 200vh; 
+  background-color: var(--bg-color);
+  min-height: 200vh;
   font-size: 1rem;
+  color: var(--text-dark);
+
+  position: relative;
+  overflow-x: hidden;
 }
 
-h3, h1, p{
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  /* More dots + slightly bigger particles */
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.26) 0 1.6px, transparent 2.6px),
+    radial-gradient(circle, rgba(255,255,255,0.18) 0 1.2px, transparent 2.2px),
+    radial-gradient(circle, rgba(255,255,255,0.12) 0 1px, transparent 2px);
+
+  /* More density */
+  background-size: 140px 140px, 220px 220px, 320px 320px;
+
+  /* Offset layers so it doesn’t look tiled */
+  background-position: 0 0, 80px 40px, 140px 120px;
+
+  opacity: 0.55;
+
+  /* IMPORTANT: remove overlay blend so it's actually visible */
+  mix-blend-mode: normal;
+
+  animation: particleDrift 18s linear infinite;
+}
+
+/* Theme-tuned particles */
+[data-theme="light"] body::before {
+  opacity: 0.55;
+  filter: none;
+}
+
+[data-theme="dark"] body::before {
+  opacity: 0.28;
+  filter: blur(0.2px); /* tiny soften so they don't sparkle too hard */
+}
+
+@keyframes particleDrift {
+  0%   { transform: translate3d(0, 0, 0); }
+  50%  { transform: translate3d(-30px, 40px, 0); }
+  100% { transform: translate3d(-60px, 80px, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none; }
+}
+
+/* ===== Scroll Reveal Animation ===== */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Accessibility: disable animation for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Hero name */
+#about .typing-container {
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+h1, h3 {
   line-height: 2.5;
   text-align: center;
+  color: var(--text-primary);
+}
+
+[data-theme="light"] h1,
+[data-theme="light"] h3 {
+  color: var(--text-dark);
+}
+
+p {
+  line-height: 2.5;
+  text-align: center;
+  color: var(--text-dark);      /* paragraphs = readable neutral */
 }
 
 section {
@@ -41,12 +154,14 @@ section {
 }
 
 .navbar {
-  background-color: rgb(136, 197, 211);
+  position: relative;
+  background-color: var(--card-color);
   padding: 1rem 0.5rem;
+  padding-right: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: rgb(4, 134, 4);
+  color: var(--text-primary);
   border-radius: 40px;
   width: 100%;
   max-width: 900px;
@@ -71,22 +186,76 @@ section {
 }
 .navbar-list a {
   text-decoration: none;
-  color: rgb(9, 98, 121);
+  color: var(--text-primary);
   font-weight: bold;
   padding: 0.3rem 0.6rem;
   display: block;
   white-space: nowrap;
 }
 
-.navbar-list a:hover {
-  color: black;
-  background-color: rgb(136, 197, 211);
+.navbar-list a.nav-active {
+  background-color: rgba(255, 255, 255, 0.35);
   border-radius: 10px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+[data-theme="dark"] .navbar-list a.nav-active {
+  background-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+}
+
+.navbar-list a:hover {
+  color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.25); /* subtle pill effect */
+  border-radius: 10px;
+}
+
+.theme-toggle {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid var(--text-primary);
+  background: var(--white);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+/* Make the icon feel bold + visible */
+.theme-toggle svg {
+  color: var(--text-primary);
+  font-size: 18px;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,0.15));
+}
+
+/* Light mode: tiny tint so icon has contrast */
+[data-theme="light"] .theme-toggle {
+  background: rgba(255,255,255,0.9);
+}
+
+/* Dark mode: invert it so it looks intentional */
+[data-theme="dark"] .theme-toggle {
+  background: rgba(16,53,68,0.35);
+}
+
+[data-theme="dark"] .navbar-list a:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Hover */
+.theme-toggle:hover {
+  transform: translateY(-50%) scale(1.06);
+  filter: brightness(0.98);
 }
 
 .Me img {
   padding: 7px;
-  background-color: white;
+  background-color: var(--white);
   max-width: 100%;
   height: auto;
   width: 300px;
@@ -94,7 +263,7 @@ section {
 
 .Me {
   padding: 2rem;
-  background-color: rgb(136, 197, 211);
+  background-color: var(--card-color);
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -145,7 +314,7 @@ section {
 }
 
 .flip-card:hover .flip-card-front {
-  background-color: rgb(136, 197, 211);
+  background-color: var(--card-color);
 }
 
 .flip-card-inner {
@@ -168,7 +337,7 @@ section {
   backface-visibility: hidden;
   border-radius: 12px;
   padding: 1.25rem;
-  box-shadow: 0 4px 10px rgb(136, 197, 211);
+  box-shadow: 0 4px 10px var(--card-color);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -176,31 +345,32 @@ section {
 }
 
 .flip-card-front {
-  background-color: white;
+  background-color: var(--white);
 }
 
 .flip-card-front h1 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
-  color: black;
+  color: var(--text-dark);
 }
 
 .click-hint {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-dark);
+  opacity: 0.7;
   font-style: italic;
   margin-top: 1rem;
 }
 
 .flip-card-back {
-  background-color: rgb(136, 197, 211);
-  color: rgb(9, 98, 121);
+  background-color: var(--card-color);
+  color: var(--text-primary);
   transform: rotateY(180deg);
   overflow-y: auto;
 }
 
 .flip-card-back h2 {
-  color: black;
+  color: var(--text-dark);
   font-size: 1.3rem;
   margin-bottom: 1rem;
 }
@@ -210,7 +380,7 @@ section {
   line-height: 1.6;
   text-align: left;
   margin-bottom: 0.5rem;
-  color: black;
+  color: var(--text-dark);
 }
 
 #socials {
@@ -225,7 +395,7 @@ section {
 }
 
 .social-icon {
-  color: rgb(136,197,211);
+  color: var(--card-color);
   display: flex;
   justify-content: center;
   transition: transform 0.2s ease-in-out;
@@ -239,7 +409,7 @@ section {
 }
 
 .icon {
-  color: rgb(136, 197, 211);
+  color: var(--card-color);
 }
 
 /* Floating animation */
@@ -259,7 +429,7 @@ section {
 
 .resume {
   padding: 1.25rem;
-  background-color: rgb(136, 197, 211);
+  background-color: var(--card-color);
   font-size: 1.2rem;
   max-width: 100%;
   display: flex;
@@ -281,9 +451,9 @@ section {
   padding: 0.75rem 1.5rem;
   font-size: 1.1rem;
   font-weight: bold;
-  color: rgb(9, 98, 121);
-  background-color: rgb(136, 197, 211);
-  border: 2px solid rgb(9, 98, 121);
+  color: var(--text-primary);
+  background-color: var(--card-color);
+  border: 2px solid var(--text-primary);
   border-radius: 25px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -294,8 +464,8 @@ section {
 }
 
 .download-button:hover {
-  background-color: white;
-  color: rgb(9, 98, 121);
+  background-color: var(--white);
+  color: var(--text-primary);
   transform: scale(1.05);
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
@@ -309,12 +479,12 @@ section {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: white;
+  background-color: var(--bg-color);
 }
 
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background-color: rgb(136, 197, 211);
+  background-color: var(--card-color);
 }
 
 ::-webkit-scrollbar-thumb:hover {
