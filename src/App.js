@@ -539,7 +539,6 @@ function App() {
             </a>
           </div>
           <div className="social-icon">
-            {/* ── Replace href with your GitHub URL ── */}
             <a href="https://github.com/Shiv05-code" target="_blank" rel="noopener noreferrer">
               <FontAwesomeIcon icon={faGithub} size="3x" className="icon" />
             </a>
